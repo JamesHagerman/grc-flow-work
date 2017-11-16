@@ -1,0 +1,13 @@
+<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3.org/2001/10/synthesis http://www.w3.org/TR/speech-synthesis/synthesis.xsd" xml:lang="en-US">
+
+<!- run this with: espeak -v en -m -f filename.ssml ->
+<!- or use something like: espeak -v en -m "<ssml stuff>" ->
+
+<say-as interpret-as='characters'>K M 6 I D A</say-as>
+<break strength='strong' />
+
+Software defined radio transmit test
+<break time='5s' />
+
+
+</speak>
