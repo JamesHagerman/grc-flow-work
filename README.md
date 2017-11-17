@@ -18,7 +18,7 @@ For TX, I've been using the BladeRF x40 and the LimeSDR USB.
 ### GRC Osmocom Source block device arguments:
 
 ```
-bladerf=0
+bladerf=0,buffers=128,buflen=8192,transfers=32
 
 rtl=0
 
