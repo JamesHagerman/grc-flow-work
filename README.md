@@ -15,6 +15,16 @@ has been improved to help make it work better in the HF range.
 
 For TX, I've been using the BladeRF x40 and the LimeSDR USB.
 
+### GRC Osmocom Source block device arguments:
+
+```
+bladerf=0,buffers=128,buflen=8192,transfers=32
+
+rtl=0
+
+driver=lime,soapy=0
+```
+
 To install all the packages I need to get GNU Radio Companion, GQRX, drivers, and various other
 stuff working, I've used these two links and the Ubuntu PPA's mentioned there:
 
@@ -32,5 +42,3 @@ If you have opinions or ideas about how any of these graphs could be improved PL
 know! I'm new at this
 
 And let me know if you end up using any of these!
-
-
