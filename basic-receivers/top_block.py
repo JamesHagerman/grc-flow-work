@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Top Block
-# Generated: Tue Jan 23 18:35:06 2018
+# Generated: Tue Jan 23 22:17:41 2018
 ##################################################
 
 if __name__ == '__main__':
@@ -19,6 +19,7 @@ if __name__ == '__main__':
 from PyQt4 import Qt
 from gnuradio import analog
 from gnuradio import blocks
+from gnuradio import digital
 from gnuradio import eng_notation
 from gnuradio import filter
 from gnuradio import gr
@@ -64,10 +65,10 @@ class top_block(gr.top_block, Qt.QWidget):
         ##################################################
         self.rf_freq = rf_freq = 434.2e6
         self.audio_rate = audio_rate = 48000
-        self.squelch_thresh = squelch_thresh = 1
-        self.samp_rate = samp_rate = 1800000
+        self.squelch_thresh = squelch_thresh = -30
+        self.samp_rate = samp_rate = 1000000
+        self.samp_per_sym = samp_per_sym = 1000
         self.low_cut = low_cut = 10e3
-        self.high_cut = high_cut = 100e3
         self.fsk_deviation_hz = fsk_deviation_hz = 4500
         self.average_len = average_len = 150
         self.audio_interp = audio_interp = rf_freq/audio_rate
@@ -75,9 +76,12 @@ class top_block(gr.top_block, Qt.QWidget):
         ##################################################
         # Blocks
         ##################################################
-        self._squelch_thresh_range = Range(-90, 1, 1, 1, 200)
+        self._squelch_thresh_range = Range(-90, 1, 1, -30, 200)
         self._squelch_thresh_win = RangeWidget(self._squelch_thresh_range, self.set_squelch_thresh, 'Squelch', "counter_slider", float)
         self.top_layout.addWidget(self._squelch_thresh_win)
+        self._samp_per_sym_range = Range(1, 10000, 10, 1000, 200)
+        self._samp_per_sym_win = RangeWidget(self._samp_per_sym_range, self.set_samp_per_sym, 'Samples per symbol', "counter_slider", int)
+        self.top_layout.addWidget(self._samp_per_sym_win)
         self._low_cut_range = Range(0, samp_rate/2, 1e3, 10e3, 200)
         self._low_cut_win = RangeWidget(self._low_cut_range, self.set_low_cut, 'Low Cut', "counter_slider", float)
         self.top_layout.addWidget(self._low_cut_win)
@@ -97,6 +101,53 @@ class top_block(gr.top_block, Qt.QWidget):
         self.rtlsdr.set_antenna('', 0)
         self.rtlsdr.set_bandwidth(0, 0)
           
+        self.qtgui_time_sink_x_0_0 = qtgui.time_sink_f(
+        	2048, #size
+        	samp_rate*1000, #samp_rate
+        	"After Recovery", #name
+        	1 #number of inputs
+        )
+        self.qtgui_time_sink_x_0_0.set_update_time(0.10)
+        self.qtgui_time_sink_x_0_0.set_y_axis(-50, 50)
+        
+        self.qtgui_time_sink_x_0_0.set_y_label('Amplitude', "")
+        
+        self.qtgui_time_sink_x_0_0.enable_tags(-1, True)
+        self.qtgui_time_sink_x_0_0.set_trigger_mode(qtgui.TRIG_MODE_AUTO, qtgui.TRIG_SLOPE_NEG, -10, 0.0001, 0, "")
+        self.qtgui_time_sink_x_0_0.enable_autoscale(False)
+        self.qtgui_time_sink_x_0_0.enable_grid(False)
+        self.qtgui_time_sink_x_0_0.enable_axis_labels(True)
+        self.qtgui_time_sink_x_0_0.enable_control_panel(True)
+        
+        if not True:
+          self.qtgui_time_sink_x_0_0.disable_legend()
+        
+        labels = ['', '', '', '', '',
+                  '', '', '', '', '']
+        widths = [1, 1, 1, 1, 1,
+                  1, 1, 1, 1, 1]
+        colors = ["blue", "red", "green", "black", "cyan",
+                  "magenta", "yellow", "dark red", "dark green", "blue"]
+        styles = [1, 1, 1, 1, 1,
+                  1, 1, 1, 1, 1]
+        markers = [-1, -1, -1, -1, -1,
+                   -1, -1, -1, -1, -1]
+        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
+                  1.0, 1.0, 1.0, 1.0, 1.0]
+        
+        for i in xrange(1):
+            if len(labels[i]) == 0:
+                self.qtgui_time_sink_x_0_0.set_line_label(i, "Data {0}".format(i))
+            else:
+                self.qtgui_time_sink_x_0_0.set_line_label(i, labels[i])
+            self.qtgui_time_sink_x_0_0.set_line_width(i, widths[i])
+            self.qtgui_time_sink_x_0_0.set_line_color(i, colors[i])
+            self.qtgui_time_sink_x_0_0.set_line_style(i, styles[i])
+            self.qtgui_time_sink_x_0_0.set_line_marker(i, markers[i])
+            self.qtgui_time_sink_x_0_0.set_line_alpha(i, alphas[i])
+        
+        self._qtgui_time_sink_x_0_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0_0.pyqwidget(), Qt.QWidget)
+        self.top_layout.addWidget(self._qtgui_time_sink_x_0_0_win)
         self.qtgui_time_sink_x_0 = qtgui.time_sink_f(
         	2048, #size
         	samp_rate*1000, #samp_rate
@@ -192,7 +243,7 @@ class top_block(gr.top_block, Qt.QWidget):
         	firdes.WIN_BLACKMAN_hARRIS, #wintype
         	rf_freq, #fc
         	samp_rate*2, #bw
-        	"Before filter", #name
+        	"Front end", #name
         	1 #number of inputs
         )
         self.qtgui_freq_sink_x_0.set_update_time(0.10)
@@ -232,10 +283,12 @@ class top_block(gr.top_block, Qt.QWidget):
         self.top_layout.addWidget(self._qtgui_freq_sink_x_0_win)
         self.low_pass_filter_0 = filter.fir_filter_ccf(1, firdes.low_pass(
         	10, samp_rate, low_cut, 10e3, firdes.WIN_HAMMING, 6.76))
-        self._high_cut_range = Range(0, samp_rate/2, 1e3, 100e3, 200)
-        self._high_cut_win = RangeWidget(self._high_cut_range, self.set_high_cut, 'High Cut', "counter_slider", float)
-        self.top_layout.addWidget(self._high_cut_win)
+        self.digital_clock_recovery_mm_xx_0 = digital.clock_recovery_mm_ff(samp_per_sym*(1+0.0), 0.25*0.175*0.175, 0.5, 0.175, 0.005)
+        self.digital_binary_slicer_fb_0 = digital.binary_slicer_fb()
+        self.blocks_pack_k_bits_bb_0 = blocks.pack_k_bits_bb(8)
         self.blocks_moving_average_xx_0 = blocks.moving_average_ff(average_len, 1.0/average_len, 4000)
+        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_char*1, '/home/jamis/my_root/dev/radio/grc-flow-work/basic-receivers/output-working-2fsk-front-end-bytes.raw', False)
+        self.blocks_file_sink_0.set_unbuffered(False)
         self.analog_simple_squelch_cc_0 = analog.simple_squelch_cc(squelch_thresh, 1)
         self.analog_quadrature_demod_cf_0 = analog.quadrature_demod_cf(samp_rate/(2*math.pi*fsk_deviation_hz/8.0))
 
@@ -243,11 +296,16 @@ class top_block(gr.top_block, Qt.QWidget):
         # Connections
         ##################################################
         self.connect((self.analog_quadrature_demod_cf_0, 0), (self.blocks_moving_average_xx_0, 0))    
-        self.connect((self.analog_simple_squelch_cc_0, 0), (self.analog_quadrature_demod_cf_0, 0))    
-        self.connect((self.analog_simple_squelch_cc_0, 0), (self.qtgui_freq_sink_x_0_1, 0))    
+        self.connect((self.analog_simple_squelch_cc_0, 0), (self.low_pass_filter_0, 0))    
+        self.connect((self.blocks_moving_average_xx_0, 0), (self.digital_clock_recovery_mm_xx_0, 0))    
         self.connect((self.blocks_moving_average_xx_0, 0), (self.qtgui_time_sink_x_0, 0))    
-        self.connect((self.low_pass_filter_0, 0), (self.analog_simple_squelch_cc_0, 0))    
-        self.connect((self.rtlsdr, 0), (self.low_pass_filter_0, 0))    
+        self.connect((self.blocks_pack_k_bits_bb_0, 0), (self.blocks_file_sink_0, 0))    
+        self.connect((self.digital_binary_slicer_fb_0, 0), (self.blocks_pack_k_bits_bb_0, 0))    
+        self.connect((self.digital_clock_recovery_mm_xx_0, 0), (self.digital_binary_slicer_fb_0, 0))    
+        self.connect((self.digital_clock_recovery_mm_xx_0, 0), (self.qtgui_time_sink_x_0_0, 0))    
+        self.connect((self.low_pass_filter_0, 0), (self.analog_quadrature_demod_cf_0, 0))    
+        self.connect((self.low_pass_filter_0, 0), (self.qtgui_freq_sink_x_0_1, 0))    
+        self.connect((self.rtlsdr, 0), (self.analog_simple_squelch_cc_0, 0))    
         self.connect((self.rtlsdr, 0), (self.qtgui_freq_sink_x_0, 0))    
 
     def closeEvent(self, event):
@@ -285,11 +343,19 @@ class top_block(gr.top_block, Qt.QWidget):
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
         self.rtlsdr.set_sample_rate(self.samp_rate)
+        self.qtgui_time_sink_x_0_0.set_samp_rate(self.samp_rate*1000)
         self.qtgui_time_sink_x_0.set_samp_rate(self.samp_rate*1000)
         self.qtgui_freq_sink_x_0_1.set_frequency_range(self.rf_freq, self.samp_rate*2)
         self.qtgui_freq_sink_x_0.set_frequency_range(self.rf_freq, self.samp_rate*2)
         self.low_pass_filter_0.set_taps(firdes.low_pass(10, self.samp_rate, self.low_cut, 10e3, firdes.WIN_HAMMING, 6.76))
         self.analog_quadrature_demod_cf_0.set_gain(self.samp_rate/(2*math.pi*self.fsk_deviation_hz/8.0))
+
+    def get_samp_per_sym(self):
+        return self.samp_per_sym
+
+    def set_samp_per_sym(self, samp_per_sym):
+        self.samp_per_sym = samp_per_sym
+        self.digital_clock_recovery_mm_xx_0.set_omega(self.samp_per_sym*(1+0.0))
 
     def get_low_cut(self):
         return self.low_cut
@@ -297,12 +363,6 @@ class top_block(gr.top_block, Qt.QWidget):
     def set_low_cut(self, low_cut):
         self.low_cut = low_cut
         self.low_pass_filter_0.set_taps(firdes.low_pass(10, self.samp_rate, self.low_cut, 10e3, firdes.WIN_HAMMING, 6.76))
-
-    def get_high_cut(self):
-        return self.high_cut
-
-    def set_high_cut(self, high_cut):
-        self.high_cut = high_cut
 
     def get_fsk_deviation_hz(self):
         return self.fsk_deviation_hz
