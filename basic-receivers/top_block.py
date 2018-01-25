@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Top Block
-# Generated: Wed Jan 24 03:10:01 2018
+# Generated: Thu Jan 25 02:03:05 2018
 ##################################################
 
 if __name__ == '__main__':
@@ -67,6 +67,7 @@ class top_block(gr.top_block, Qt.QWidget):
         self.rf_freq = rf_freq = 434.2e6
         self.fsk_deviation_hz = fsk_deviation_hz = 4500
         self.audio_rate = audio_rate = 48000
+        self.x_axis_size = x_axis_size = 80
         self.squelch_thresh = squelch_thresh = -30
         self.samp_per_sym = samp_per_sym = 1000
         self.quad_demod_gain = quad_demod_gain = samp_rate/(2*math.pi*fsk_deviation_hz/8.0)
@@ -106,26 +107,26 @@ class top_block(gr.top_block, Qt.QWidget):
         self.rtlsdr.set_antenna('', 0)
         self.rtlsdr.set_bandwidth(0, 0)
           
-        self.qtgui_time_sink_x_0_0 = qtgui.time_sink_f(
-        	50, #size
+        self.qtgui_time_sink_x_0_0_0 = qtgui.time_sink_f(
+        	x_axis_size, #size
         	samp_rate, #samp_rate
-        	"After Recovery", #name
+        	"After Complete Recovery", #name
         	1 #number of inputs
         )
-        self.qtgui_time_sink_x_0_0.set_update_time(1)
-        self.qtgui_time_sink_x_0_0.set_y_axis(-15, 15)
+        self.qtgui_time_sink_x_0_0_0.set_update_time(1)
+        self.qtgui_time_sink_x_0_0_0.set_y_axis(-0.5, 1.5)
         
-        self.qtgui_time_sink_x_0_0.set_y_label('Amplitude', "")
+        self.qtgui_time_sink_x_0_0_0.set_y_label('Amplitude', "")
         
-        self.qtgui_time_sink_x_0_0.enable_tags(-1, True)
-        self.qtgui_time_sink_x_0_0.set_trigger_mode(qtgui.TRIG_MODE_AUTO, qtgui.TRIG_SLOPE_NEG, 5, 0, 0, "")
-        self.qtgui_time_sink_x_0_0.enable_autoscale(False)
-        self.qtgui_time_sink_x_0_0.enable_grid(False)
-        self.qtgui_time_sink_x_0_0.enable_axis_labels(True)
-        self.qtgui_time_sink_x_0_0.enable_control_panel(True)
+        self.qtgui_time_sink_x_0_0_0.enable_tags(-1, True)
+        self.qtgui_time_sink_x_0_0_0.set_trigger_mode(qtgui.TRIG_MODE_TAG, qtgui.TRIG_SLOPE_NEG, 5, 0, 0, "length_key")
+        self.qtgui_time_sink_x_0_0_0.enable_autoscale(False)
+        self.qtgui_time_sink_x_0_0_0.enable_grid(False)
+        self.qtgui_time_sink_x_0_0_0.enable_axis_labels(True)
+        self.qtgui_time_sink_x_0_0_0.enable_control_panel(True)
         
         if not True:
-          self.qtgui_time_sink_x_0_0.disable_legend()
+          self.qtgui_time_sink_x_0_0_0.disable_legend()
         
         labels = ['', '', '', '', '',
                   '', '', '', '', '']
@@ -142,19 +143,19 @@ class top_block(gr.top_block, Qt.QWidget):
         
         for i in xrange(1):
             if len(labels[i]) == 0:
-                self.qtgui_time_sink_x_0_0.set_line_label(i, "Data {0}".format(i))
+                self.qtgui_time_sink_x_0_0_0.set_line_label(i, "Data {0}".format(i))
             else:
-                self.qtgui_time_sink_x_0_0.set_line_label(i, labels[i])
-            self.qtgui_time_sink_x_0_0.set_line_width(i, widths[i])
-            self.qtgui_time_sink_x_0_0.set_line_color(i, colors[i])
-            self.qtgui_time_sink_x_0_0.set_line_style(i, styles[i])
-            self.qtgui_time_sink_x_0_0.set_line_marker(i, markers[i])
-            self.qtgui_time_sink_x_0_0.set_line_alpha(i, alphas[i])
+                self.qtgui_time_sink_x_0_0_0.set_line_label(i, labels[i])
+            self.qtgui_time_sink_x_0_0_0.set_line_width(i, widths[i])
+            self.qtgui_time_sink_x_0_0_0.set_line_color(i, colors[i])
+            self.qtgui_time_sink_x_0_0_0.set_line_style(i, styles[i])
+            self.qtgui_time_sink_x_0_0_0.set_line_marker(i, markers[i])
+            self.qtgui_time_sink_x_0_0_0.set_line_alpha(i, alphas[i])
         
-        self._qtgui_time_sink_x_0_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0_0.pyqwidget(), Qt.QWidget)
-        self.top_layout.addWidget(self._qtgui_time_sink_x_0_0_win)
+        self._qtgui_time_sink_x_0_0_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0_0_0.pyqwidget(), Qt.QWidget)
+        self.top_layout.addWidget(self._qtgui_time_sink_x_0_0_0_win)
         self.qtgui_time_sink_x_0 = qtgui.time_sink_f(
-        	50000, #size
+        	x_axis_size*1000, #size
         	samp_rate, #samp_rate
         	"After Average", #name
         	1 #number of inputs
@@ -165,7 +166,7 @@ class top_block(gr.top_block, Qt.QWidget):
         self.qtgui_time_sink_x_0.set_y_label('Amplitude', "")
         
         self.qtgui_time_sink_x_0.enable_tags(-1, True)
-        self.qtgui_time_sink_x_0.set_trigger_mode(qtgui.TRIG_MODE_AUTO, qtgui.TRIG_SLOPE_NEG, 5, 0.0001, 0, "")
+        self.qtgui_time_sink_x_0.set_trigger_mode(qtgui.TRIG_MODE_AUTO, qtgui.TRIG_SLOPE_NEG, 5, 0, 0, "")
         self.qtgui_time_sink_x_0.enable_autoscale(False)
         self.qtgui_time_sink_x_0.enable_grid(False)
         self.qtgui_time_sink_x_0.enable_axis_labels(True)
@@ -205,8 +206,8 @@ class top_block(gr.top_block, Qt.QWidget):
         	firdes.WIN_BLACKMAN_hARRIS, #wintype
         	rf_freq, #fc
         	samp_rate*2, #bw
-        	"After filter and Squelch", #name
-        	1 #number of inputs
+        	"Before and after filter and Squelch", #name
+        	2 #number of inputs
         )
         self.qtgui_freq_sink_x_0_1.set_update_time(0.10)
         self.qtgui_freq_sink_x_0_1.set_y_axis(-140, 10)
@@ -232,7 +233,7 @@ class top_block(gr.top_block, Qt.QWidget):
                   "magenta", "yellow", "dark red", "dark green", "dark blue"]
         alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
                   1.0, 1.0, 1.0, 1.0, 1.0]
-        for i in xrange(1):
+        for i in xrange(2):
             if len(labels[i]) == 0:
                 self.qtgui_freq_sink_x_0_1.set_line_label(i, "Data {0}".format(i))
             else:
@@ -245,8 +246,13 @@ class top_block(gr.top_block, Qt.QWidget):
         self.top_layout.addWidget(self._qtgui_freq_sink_x_0_1_win)
         self.low_pass_filter_0 = filter.fir_filter_ccf(1, firdes.low_pass(
         	10, samp_rate, low_cut, 10e3, firdes.WIN_HAMMING, 6.76))
+        self.digital_correlate_access_code_tag_bb_0 = digital.correlate_access_code_tag_bb('10101010101010101110101010101010', 0, 'length_key')
         self.digital_clock_recovery_mm_xx_0 = digital.clock_recovery_mm_ff(samp_per_sym*(1+0.0), 0.1, 0, 0.01, 0.01)
+        self.digital_chunks_to_symbols_xx_0 = digital.chunks_to_symbols_bf((0,1), 1)
         self.digital_binary_slicer_fb_0 = digital.binary_slicer_fb()
+        self.blocks_unpacked_to_packed_xx_0 = blocks.unpacked_to_packed_bb(1, gr.GR_MSB_FIRST)
+        self.blocks_tagged_stream_align_0 = blocks.tagged_stream_align(gr.sizeof_char*1, 'length_key')
+        self.blocks_tag_debug_0 = blocks.tag_debug(gr.sizeof_char*1, 'omg_name_needed', "length_key"); self.blocks_tag_debug_0.set_display(True)
         self.blocks_moving_average_xx_0 = blocks.moving_average_ff(average_len, 1.0/average_len, 4000)
         self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_char*1, '/home/jamis/my_root/dev/radio/grc-flow-work/basic-receivers/output-working-2fsk-front-end-bytes.raw', False)
         self.blocks_file_sink_0.set_unbuffered(False)
@@ -262,12 +268,18 @@ class top_block(gr.top_block, Qt.QWidget):
         self.connect((self.blocks_add_const_vxx_0_0, 0), (self.blocks_moving_average_xx_0, 0))    
         self.connect((self.blocks_moving_average_xx_0, 0), (self.digital_clock_recovery_mm_xx_0, 0))    
         self.connect((self.blocks_moving_average_xx_0, 0), (self.qtgui_time_sink_x_0, 0))    
-        self.connect((self.digital_binary_slicer_fb_0, 0), (self.blocks_file_sink_0, 0))    
+        self.connect((self.blocks_tagged_stream_align_0, 0), (self.blocks_unpacked_to_packed_xx_0, 0))    
+        self.connect((self.blocks_unpacked_to_packed_xx_0, 0), (self.blocks_file_sink_0, 0))    
+        self.connect((self.digital_binary_slicer_fb_0, 0), (self.digital_correlate_access_code_tag_bb_0, 0))    
+        self.connect((self.digital_chunks_to_symbols_xx_0, 0), (self.qtgui_time_sink_x_0_0_0, 0))    
         self.connect((self.digital_clock_recovery_mm_xx_0, 0), (self.digital_binary_slicer_fb_0, 0))    
-        self.connect((self.digital_clock_recovery_mm_xx_0, 0), (self.qtgui_time_sink_x_0_0, 0))    
+        self.connect((self.digital_correlate_access_code_tag_bb_0, 0), (self.blocks_tag_debug_0, 0))    
+        self.connect((self.digital_correlate_access_code_tag_bb_0, 0), (self.blocks_tagged_stream_align_0, 0))    
+        self.connect((self.digital_correlate_access_code_tag_bb_0, 0), (self.digital_chunks_to_symbols_xx_0, 0))    
         self.connect((self.low_pass_filter_0, 0), (self.analog_quadrature_demod_cf_0, 0))    
-        self.connect((self.low_pass_filter_0, 0), (self.qtgui_freq_sink_x_0_1, 0))    
+        self.connect((self.low_pass_filter_0, 0), (self.qtgui_freq_sink_x_0_1, 1))    
         self.connect((self.rtlsdr, 0), (self.analog_simple_squelch_cc_0, 0))    
+        self.connect((self.rtlsdr, 0), (self.qtgui_freq_sink_x_0_1, 0))    
 
     def closeEvent(self, event):
         self.settings = Qt.QSettings("GNU Radio", "top_block")
@@ -281,7 +293,7 @@ class top_block(gr.top_block, Qt.QWidget):
         self.samp_rate = samp_rate
         self.set_quad_demod_gain(self.samp_rate/(2*math.pi*self.fsk_deviation_hz/8.0))
         self.rtlsdr.set_sample_rate(self.samp_rate)
-        self.qtgui_time_sink_x_0_0.set_samp_rate(self.samp_rate)
+        self.qtgui_time_sink_x_0_0_0.set_samp_rate(self.samp_rate)
         self.qtgui_time_sink_x_0.set_samp_rate(self.samp_rate)
         self.qtgui_freq_sink_x_0_1.set_frequency_range(self.rf_freq, self.samp_rate*2)
         self.low_pass_filter_0.set_taps(firdes.low_pass(10, self.samp_rate, self.low_cut, 10e3, firdes.WIN_HAMMING, 6.76))
@@ -308,6 +320,12 @@ class top_block(gr.top_block, Qt.QWidget):
     def set_audio_rate(self, audio_rate):
         self.audio_rate = audio_rate
         self.set_audio_interp(self.rf_freq/self.audio_rate)
+
+    def get_x_axis_size(self):
+        return self.x_axis_size
+
+    def set_x_axis_size(self, x_axis_size):
+        self.x_axis_size = x_axis_size
 
     def get_squelch_thresh(self):
         return self.squelch_thresh
